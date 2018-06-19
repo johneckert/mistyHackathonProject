@@ -31,29 +31,64 @@
 });
 
 async function RunMe(ip) {
-  alert('Run!');
+  // alert('Run!');
   //Call the APIs
   var lightClient = new LightClient(ip, 10000);
-
+  var timeOutID;
+  delayedFace(1);
+  delayedFace(2);
+  delayedFace(3);
   // await sleep(5000); //give it time to connect before attempting to subscribe
-  lightClient.PostCommand('images/change', ` {"FileName": "Unamused.jpg"}`, function(data) {
-    console.log(JSON.stringify(data));
-  });
 
-  window.setTimeout(makeFaceOne, 2000);
-  window.setTimeout(makeFaceTwo, 2000);
+  function delayedFace(faceID) {
+    if (faceID === 1) {
+      timeOutID = window.setTimeout(makeFaceOne, 2000);
+    } else if (faceID === 2) {
+      timeOutID = window.setTimeout(makeFaceTwo, 4000);
+    } else {
+      timeOutID = window.setTimeout(makeFaceThree, 6000);
+    }
 
-  function makeFaceOne() {
-    lightClient.PostCommand('images/change', ` {"FileName": "Confused.jpg"}`, function(data) {
-      console.log(JSON.stringify(data));
-    });
+    function makeFaceOne() {
+      lightClient.PostCommand('images/change', '{"FileName": "Confused.jpg"}', function(data) {
+        console.log(JSON.stringify(data));
+      });
+    }
+
+    function makeFaceTwo() {
+      lightClient.PostCommand('images/change', '{"FileName": "Concerned.jpg"}', function(data) {
+        console.log(JSON.stringify(data));
+      });
+    }
+
+    function makeFaceThree() {
+      lightClient.PostCommand('images/change', '{"FileName": "Unamused.jpg"}', function(data) {
+        console.log(JSON.stringify(data));
+      });
+    }
   }
 
-  function makeFaceTwo(fileName) {
-    lightClient.PostCommand('images/change', ` {"FileName": "Concerned.jpg"}`, function(data) {
-      console.log(JSON.stringify(data));
-    });
-  }
+  // lightClient.PostCommand('images/change', ` {"FileName": "Unamused.jpg"}`, function(data) {
+  //   console.log(JSON.stringify(data));
+  // });
+
+  // function makeFaceOne() {
+  //   lightClient.PostCommand('images/change', '{"FileName": "Confused.jpg"}', function(data) {
+  //     console.log(JSON.stringify(data));
+  //   });
+  // }
+  //
+  // function makeFaceTwo() {
+  //   lightClient.PostCommand('images/change', '{"FileName": "Concerned.jpg"}', function(data) {
+  //     console.log(JSON.stringify(data));
+  //   });
+  // }
+  //
+  // function makeFaceThree() {
+  //   lightClient.PostCommand('images/change', '{"FileName": "Unamused.jpg"}', function(data) {
+  //     console.log(JSON.stringify(data));
+  //   });
+  // }
 
   // lightClient.PostCommand('images/change', ' {"FileName":"Unamused.jpg"}', function(data) {
   //   console.log(JSON.stringify(data));
