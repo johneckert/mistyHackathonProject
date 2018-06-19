@@ -71,7 +71,7 @@ async function RunMe(ip) {
       console.log(JSON.stringify(data));
     }
   );
-  lightClient.PostComman('head/move', ' {"Pitch":"-5", "Velocity": 10}', function(data) {
+  lightClient.PostCommand('head/move', ' {"Pitch":"-5", "Velocity": 10}', function(data) {
     console.log(JSON.stringify(data));
   });
   // 	STEP 5B: Turn left and head down 1 count
@@ -82,7 +82,7 @@ async function RunMe(ip) {
       console.log(JSON.stringify(data));
     }
   );
-  lightClient.PostComman('head/move', ' {"Pitch":5, "Velocity": 10}', function(data) {
+  lightClient.PostCommand('head/move', ' {"Pitch":5, "Velocity": 10}', function(data) {
     console.log(JSON.stringify(data));
   });
   // STEP 6: Spin 8 Counts land facing 90 to left. maybe flash led colors while spinnig.
