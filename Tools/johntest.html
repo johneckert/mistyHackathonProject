@@ -36,9 +36,12 @@ async function RunMe(ip) {
   var lightClient = new LightClient(ip, 10000);
 
   // await sleep(5000); //give it time to connect before attempting to subscribe
+  lightClient.PostCommand('images/change', ` {"FileName": "Unamused.jpg"}`, function(data) {
+    console.log(JSON.stringify(data));
+  });
 
   window.setTimeout(makeFaceOne, 2000);
-  window.setTimeout(makeFaceTwo, 4000);
+  window.setTimeout(makeFaceTwo, 2000);
 
   function makeFaceOne() {
     lightClient.PostCommand('images/change', ` {"FileName": "Confused.jpg"}`, function(data) {
