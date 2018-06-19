@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="../javascript/lightClient.js"></script>
+	<script src="../javascript/lightSocket.js"></script>
+
+</head>
+    <body>
+		<form id="setup" class="form-inline">
+			<!-- <label >Robot IP Address</label> -->
+			<div>
+				<!-- <input id="misty-robot-ip-address"> -->
+				<button id="set-up" type="submit" class="btn btn-primary pull-down submit form-control">Start Exercise</button>
+			</div>
+		</form>
+		<p>
+				Nothing to see here, all the action is in the console.
+		</p>
+	</body>
+	<script>
+	$('#setup').submit(async function(e) {
+  e.preventDefault();
+  var ip = '192.168.1.41';
+
+  if (!ip) {
+    alert('Please enter a valid IP or name');
+    return;
+  }
+  await RunMe(ip);
+});
+
+async function RunMe(ip) {
+  alert('Run!');
+  //Call the APIs
+  var lightClient = new LightClient(ip, 10000);
+
+  // await sleep(5000); //give it time to connect before attempting to subscribe
+
+  window.setTimeout(makeFaceOne, 2000);
+  window.setTimeout(makeFaceTwo, 4000);
+
+  function makeFaceOne() {
+    lightClient.PostCommand('images/change', ` {"FileName": "Confused.jpg"}`, function(data) {
+      console.log(JSON.stringify(data));
+    });
+  }
+
+  function makeFaceTwo(fileName) {
+    lightClient.PostCommand('images/change', ` {"FileName": "Concerned.jpg"}`, function(data) {
+      console.log(JSON.stringify(data));
+    });
+  }
+
+  // lightClient.PostCommand('images/change', ' {"FileName":"Unamused.jpg"}', function(data) {
+  //   console.log(JSON.stringify(data));
+  // });
+  // lightClient.PostCommand('images/change', ' {"FileName":"Brow.png"}', function(data) {
+  //   console.log(JSON.stringify(data));
+  // });
+  // lightClient.PostCommand('images/change', ' {"FileName":"Concerned.jpg"}', function(data) {
+  //   console.log(JSON.stringify(data));
+  // });
+  // lightClient.PostCommand('images/change', ' {"FileName":"Confused.jpg"}', function(data) {
+  //   console.log(JSON.stringify(data));
+  // });
+  // lightClient.PostCommand('images/change', ' {"FileName":"Content.jpg"}', function(data) {
+  //   console.log(JSON.stringify(data));
+  // });
+}
+</script>
+</html>

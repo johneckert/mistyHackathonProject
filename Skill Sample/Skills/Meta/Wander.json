@@ -1,0 +1,10 @@
+{
+  "UniqueId" : "107a1011-981b-4905-9f77-2fdb937e3f58",
+  "Name": "Wander",
+  "Capabilities": ["display", "locomotion", "speaker", "tof", "led"],
+  "ManualOnlySkill": false,
+  "TimeoutInMs":60000,
+  "Language":"javascript",
+  "BroadcastDebug" : true,
+  "Permissions": ["display", "speaker", "locomotion", "tof", "led"]
+}

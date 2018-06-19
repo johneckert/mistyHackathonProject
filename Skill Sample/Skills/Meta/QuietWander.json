@@ -1,0 +1,10 @@
+{
+  "UniqueId" : "cdda0acb-ff07-479a-9119-37d2d66665fe",
+  "Name": "QuietWander",
+  "Capabilities": ["display", "locomotion", "tof"],
+  "ManualOnlySkill": false,
+  "TimeoutInMs":60000,
+  "Language":"javascript",
+  "BroadcastDebug" : true,
+  "Permissions": ["Display", "Locomotion", "tof"]
+}

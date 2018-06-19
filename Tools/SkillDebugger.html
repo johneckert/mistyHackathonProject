@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+	<script src="../Assets/javascript/jquery-3.2.1.min.js"></script>
+	<script src="../Assets/javascript/lightClient.js"></script>
+	<script src="../Assets/javascript/lightSocket.js"></script>
+	
+</head>
+<body>
+	<form id="setup" class="form-inline">
+		<h3>Robot IP Address</h3>
+		<div>
+			<input id="ip-address">
+			<button type="submit">Listen to Skill Debugger</button>
+		</div>
+	</form>
+
+	<form id="run-skill" class="form-inline">
+		<h3>Run Skill</h3>
+		<div>
+			<label>Name</label>
+			<input id="skill-name">
+		</div>
+		<div>
+			<label>Start Method (optional)</label>
+			<input id="start-method">
+			<button type="submit">Run Skill</button>
+		</div>
+	</form>
+
+	<form id="cancel-skill" class="form-inline">
+		<h3>Cancel Skill</h3>
+		<div>
+			<label>Name</label>
+			<input id="cancel-skill-name">
+			<button type="submit">Cancel Skill</button>
+		</div>
+	</form>
+
+	<!-- <form id="unload-skill" class="form-inline">
+		<h3>Unload Skill</h3>
+		<div>
+			<label>Name</label>
+			<input id="unload-skill-name">
+			<button type="submit">Unload Skill</button>
+		</div>
+	</form>
+
+	<form id="load-skill" class="form-inline">
+		<h3>Load Skill</h3>
+		<div>
+			<label>Name</label>
+			<input id="load-skill-name">
+			<button type="submit">Load Skill</button>
+		</div>
+	</form> -->
+
+	<form id="reload-skills" class="form-inline">
+		<h3>Reload Skills</h3>
+		<div>
+			<button type="submit">Reload Skills</button>
+		</div>
+	</form>
+
+	<form id="get-skills" class="form-inline">
+		<h3>Get Skills</h3>
+		<div>
+			<button type="submit">Get Skills</button>
+		</div>
+	</form>
+
+	<form id="cancel-all-skills" class="form-inline">
+		<h3>Cancel All Skills</h3>
+		<div>
+			<button type="submit">Cancel All Skills</button>
+		</div>
+	</form>
+		
+	<p>
+		Nothing to see here, all the action is in the console.
+	</p>
+</body>
+</html>
+
+<script>
+	$("#setup").submit(async function (e) {
+		e.preventDefault();
+		var ip = $("#ip-address").val();
+
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+		await RunMe(ip);
+	});
+
+
+	$("#run-skill").submit(async function (e) {
+		e.preventDefault();
+		var ip = $("#ip-address").val();
+		var skillName = $("#skill-name").val();
+		var skillMethod = $("#skill-method").val();
+
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+
+		console.log("Calling Run Skill for skill '" + skillName + "'")
+		var lightClient = new LightClient(ip, 10000);
+		if (skillMethod && skillMethod.trim() != "") {
+			lightClient.PostCommand("dev/sdk/skill", " {\"Skill\":\"" + skillName + "\",\"Method\":\"" + skillMethod + "\"}", function (data) { console.log("Skill command response: " + skillMethod + "..." + JSON.stringify(data)); });
+		}
+		else {
+			lightClient.PostCommand("dev/sdk/skill", " {\"Skill\":\"" + skillName + "\"}", function (data) { console.log("Skill command response: " + JSON.stringify(data)); });
+		}
+		
+	});
+
+	$("#cancel-skill").submit(async function (e) {
+		e.preventDefault();
+		var ip = $("#ip-address").val();
+		var skillName = $("#cancel-skill-name").val();
+
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+		console.log("Calling Cancel Skill for skill '" + skillName + "'")
+		var lightClient = new LightClient(ip, 10000);
+		lightClient.PostCommand("dev/sdk/skills/cancel", " {\"Skill\":\"" + skillName + "\"}", function (data) { console.log("Skill command response: " +JSON.stringify(data)); });		
+	});
+
+	$("#cancel-all-skills").submit(async function (e) {
+		e.preventDefault();
+		var ip = $("#ip-address").val();
+		
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+		console.log("Calling Cancel All Skills")
+		var lightClient = new LightClient(ip, 10000);
+		lightClient.PostCommand("dev/sdk/skills/cancel", " {}", function (data) { console.log("Skill command response: " + JSON.stringify(data)); });
+	});
+
+	$("#unload-skill").submit(async function (e) {
+		e.preventDefault();
+		var ip = $("#ip-address").val();
+		var skillName = $("#unload-skill-name").val();
+
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+		console.log("Calling Unload Skill for skill '" + skillName + "'")
+		var lightClient = new LightClient(ip, 10000);
+		lightClient.PostCommand("dev/sdk/skills/unload", " {\"Skill\":\"" + skillName + "\"}", function (data) { console.log("Skill command response: " + JSON.stringify(data)); });
+	});
+
+	$("#load-skill").submit(async function (e) {
+		e.preventDefault();
+		var ip = $("#ip-address").val();
+		var skillName = $("#load-skill-name").val();
+
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+		console.log("Calling Load Skill for skill '" + skillName + "'")
+		var lightClient = new LightClient(ip, 10000);
+		lightClient.PostCommand("dev/sdk/skills/load", " {\"Skill\":\"" + skillName + "\"}", function (data) { console.log("Skill command response: " + JSON.stringify(data)); });
+	});
+
+	$("#reload-skills").submit(async function (e) {
+		e.preventDefault();
+		alert("List shown in console...");
+		var ip = $("#ip-address").val();
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+
+		console.log("Calling Reload Skills...")
+		var lightClient = new LightClient(ip, 10000);
+		lightClient.PostCommand("dev/sdk/reload", " {}", function (data) { console.log("Skills reloading... " + JSON.stringify(data)); });
+	});
+
+	$("#get-skills").submit(async function (e) {
+		e.preventDefault();
+		alert("List shown in console...");
+		var ip = $("#ip-address").val();
+		if (!ip) {
+			alert("Please enter a valid IP or name");
+			return;
+		}
+
+		console.log("Calling Get Skills...")
+		var lightClient = new LightClient(ip, 10000);
+		lightClient.GetCommand("dev/sdk/skills", function (data) { console.log("Retrieving skills (not reloading)... " + JSON.stringify(data)); });
+	});
+
+	async function RunMe(ip) {
+		alert("View the console for SDK logging messages...");
+
+		//Setup the websockets
+		var lightSocket = new LightSocket(ip);
+		lightSocket.Connect();
+
+		await sleep(5000);//give it time to connect before attempting to subscribe
+		//TODO More variations
+		lightSocket.Subscribe("SkillData", "SkillData", 100, null, null, null, null, 
+			function (data) { 
+				if(data !== undefined) {
+					if(data.message !== undefined && data.message.message !== undefined) {
+						console.log("Message:", JSON.stringify(data.message.message)); 
+					}
+					else {
+						console.log("Message: No Data"); 
+					}
+					console.log("  Details:", data);
+				}
+			});
+	}
+
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+</script>
