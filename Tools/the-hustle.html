@@ -29,18 +29,70 @@ async function RunMe(ip) {
   var lightClient = new LightClient(ip, 10000);
 
   // STEP 1: 4 count back
-  lightClient.PostCommand('drive', ' {"LinearVelocity":0,"AngularVelocity":20}', function(data) {
-    console.log(JSON.stringify(data));
-  });
+  lightClient.PostCommand(
+    'drive/time',
+    ' {"LinearVelocity":-30,"AngularVelocity":0,"TimeMS": 4000}',
+    function(data) {
+      console.log(JSON.stringify(data));
+    }
+  );
   // STEP 2: 4 count forward
+  lightClient.PostCommand(
+    'drive/time',
+    ' {"LinearVelocity":-30,"AngularVelocity":0,"TimeMS": 4000}',
+    function(data) {
+      console.log(JSON.stringify(data));
+    }
+  );
   // STEP 3: spin left 4 count
+  lightClient.PostCommand(
+    'drive/time',
+    ' {"LinearVelocity":30,"AngularVelocity":-10,"TimeMS":4000}',
+    function(data) {
+      console.log(JSON.stringify(data));
+    }
+  );
   // *clap*
   // STEP 4: spin right 4 count
+  lightClient.PostCommand(
+    'drive/time',
+    ' {"LinearVelocity":30,"AngularVelocity":10,"TimeMS":4000}',
+    function(data) {
+      console.log(JSON.stringify(data));
+    }
+  );
   // *clap*
   // STEP 5: REPEAT FOR 8 COUNTS:
-  // 	STEP 5A: Turn right 90deg and head up 1 countt
+  // 	STEP 5A: Turn right 90deg and head up 1 count
+  lightClient.PostCommand(
+    'drive/time',
+    ' {"LinearVelocity":30,"AngularVelocity":10,"TimeMS":4000}',
+    function(data) {
+      console.log(JSON.stringify(data));
+    }
+  );
+  lightClient.PostComman('head/move', ' {"Pitch":"-5", "Velocity": 10}', function(data) {
+    console.log(JSON.stringify(data));
+  });
   // 	STEP 5B: Turn left and head down 1 count
+  lightClient.PostCommand(
+    'drive/time',
+    ' {"LinearVelocity":30,"AngularVelocity":"-10","TimeMS":4000}',
+    function(data) {
+      console.log(JSON.stringify(data));
+    }
+  );
+  lightClient.PostComman('head/move', ' {"Pitch":5, "Velocity": 10}', function(data) {
+    console.log(JSON.stringify(data));
+  });
   // STEP 6: Spin 8 Counts land facing 90 to left. maybe flash led colors while spinnig.
+  lightClient.PostCommand(
+    'drive/time',
+    ' {"LinearVelocity":30,"AngularVelocity":-10,"TimeMS":4000}',
+    function(data) {
+      console.log(JSON.stringify(data));
+    }
+  );
 
   // REPEAT DANCE 4 MORE TIMES
 }
