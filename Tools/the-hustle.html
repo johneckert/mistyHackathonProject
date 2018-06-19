@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="../javascript/lightClient.js"></script>
+	<script src="../javascript/lightSocket.js"></script>
+
+</head>
+    <body>
+		<form id="setup" class="form-inline">
+			<button id="set-up" type="submit" class="btn btn-primary pull-down submit form-control">Start Exercise</button>
+		</form>
+	</body>
+	<script>
+	$('#setup').submit(async function(e) {
+  e.preventDefault();
+  var ip = '192.168.1.41';
+
+  if (!ip) {
+    alert('Please enter a valid IP or name');
+    return;
+  }
+  await RunMe(ip);
+});
+
+async function RunMe(ip) {
+  console.log('running');
+
+  var lightClient = new LightClient(ip, 10000);
+
+  // STEP 1: 4 count back
+  lightClient.PostCommand('drive', ' {"LinearVelocity":0,"AngularVelocity":20}', function(data) {
+    console.log(JSON.stringify(data));
+  });
+  // STEP 2: 4 count forward
+  // STEP 3: spin left 4 count
+  // *clap*
+  // STEP 4: spin right 4 count
+  // *clap*
+  // STEP 5: REPEAT FOR 8 COUNTS:
+  // 	STEP 5A: Turn right 90deg and head up 1 countt
+  // 	STEP 5B: Turn left and head down 1 count
+  // STEP 6: Spin 8 Counts land facing 90 to left. maybe flash led colors while spinnig.
+
+  // REPEAT DANCE 4 MORE TIMES
+}
+</script>
+</html>
