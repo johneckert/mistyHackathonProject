@@ -1,21 +1,23 @@
 function Activate() {
-  misty.PlayAudioClip("the_hustle.wav");
-  misty.Debug("Starting Quiet Wander skill!!");
-  misty.ChangeDisplayImage("Happy.jpg");
-  misty.ChangeLED(100, 0, 255);
-  misty.DriveTime(-100, 0, 4000);
-  misty.ChangeLED(255, 255, 0);
-  misty.DriveTime(100, 0, 4000);
-  misty.DriveTime(0, 100, 4000);
-  misty.DriveTime(0, -100, 4000);
-  misty.ChangeDisplayImage("Confused.jpg");
-  misty.MoveHead("Pitch", -5, 10);
-  misty.DriveTime(0, 100, 1000);
-  misty.MoveHead("Pitch", 5, 10);
-  misty.DriveTime(0, -100, 1000);
-  misty.ChangeDisplayImage("Happy.jpg");
-  misty.ChangeLED(100, 0, 255);
-  misty.DriveTime(0, 100, 8000);
+  for (var i = 0; i <= 1; i++) {
+    misty.PlayAudioClip("the_hustle.wav");
+    misty.Debug("Starting Quiet Wander skill!!");
+    misty.ChangeDisplayImage("Happy.jpg");
+    misty.ChangeLED(3, 0, 255, 100, 0);
+    misty.DriveTime(-1, 0, 2000, 0);
+    misty.ChangeLED(255, 255, 0, 2100, 0);
+    misty.DriveTime(1, 0, 2000, 00, 100);
+    misty.DriveTime(0, 5, 2000, 2100, 0);
+    misty.DriveTime(0, -5, 2000, 2100, 0);
+    misty.ChangeDisplayImage("Confused.jpg", 2100, 0);
+    misty.MoveHead("Pitch", -5, 10, 100, 0);
+    misty.DriveTime(0, 5, 500, 100, 0);
+    misty.MoveHead("Pitch", 5, 10, 600, 0);
+    misty.DriveTime(0, -5, 500, 100, 0);
+    misty.ChangeDisplayImage("Happy.jpg", 100, 0);
+    misty.ChangeLED(100, 0, 255, 100, 0);
+    misty.DriveTime(0, 5, 4000, 100);
+  }
 }
 
 function Deactivate() {
