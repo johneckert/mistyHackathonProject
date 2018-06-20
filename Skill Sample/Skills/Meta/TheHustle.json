@@ -1,0 +1,10 @@
+{
+  "UniqueId": "the-hustle-12345",
+  "Name": "TheHustle",
+  "Capabilities": ["display", "locomotion", "LED"],
+  "ManualOnlySkill": false,
+  "TimeoutInMs": 60000,
+  "Language": "javascript",
+  "BroadcastDebug": true,
+  "Permissions": ["Display", "Locomotion", "LED"]
+}
