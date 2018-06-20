@@ -1,0 +1,637 @@
+﻿﻿<!DOCTYPE html>
+ <html>
+
+ <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Misty API Explorer</title>
+	<script src="js/Popper/popper.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+	<link rel="stylesheet" href="css/default.css" type="text/css" />
+	<script src="jquery-3.2.1.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="fonts/fontawesome-free-5.0.10/web-fonts-with-css/css/fontawesome-all.min.css" type="text/css">
+	<script src="css/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="SampleUI.js" type="text/javascript"></script>
+ </head>
+
+ <body>
+	<!--Robot Setup-->
+	<div class="robot-setup">
+		<nav class="navbar navbar-expand-xl sticky-top navbar-light bg-dark">
+			<img class="navbar-brand d-none d-md-block" src="Images/MistyRobotics.White.png" />
+			<img class="navbar-brand d-md-none" src="Images/MistySymbol.White.png" />
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<form id="setup" class="form-inline my-lg-0 ml-auto">
+					<input class="form-control mr-sm-2" id="misty-robot-ip-address" placeholder="Robot IP Address" aria-label="Search">
+					<button type="submit" class="btn btn-outline-light my-2 my-sm-0 ">Connect</button>
+					<a href="https://docs.mistyrobotics.com/onboarding/3-ways-to-interact-with-misty/api-explorer/" target="_blank" id="help">Help</a>
+				</form>
+			</div>
+		</nav>
+	</div>
+	
+	<!--Easy Commands-->
+	 <div id="content" class="mx-5">
+		<section class="d-flex flex-column pt-5" id="easy-commands">
+			<h3 class="">Easy Commands</h3>
+			<hr />
+			<div class="d-flex flex-row ml-3">
+				<div>
+					<button class="btn btn-outline-primary robot-info-btn" id="misty-robot-get-device-information">Get Device Information</button>
+				</div>
+				<div>
+					<button class="btn btn-outline-primary log-info-btn" id="misty-robot-get-log-information">Get Log Information</button>
+				</div>
+				<div>
+					<div class="dropdown">
+						<button class="eyes btn btn-outline-primary dropdown-toggle" type="button" id="moods-dropdown" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+							Select a mood
+						</button>
+						<ul id="moods" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<li class="dropdown-item"></li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<div class="dropdown">
+						<button class="led btn btn-outline-primary dropdown-toggle" id="led-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Change LED
+						</button>
+						<ul id="led" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<li class="dropdown-item"></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--Audio, Image, and Video-->
+		<section class="d-flex flex-column pt-5" id="asset-management">
+			<h3 class="">Asset Management</h3>
+			<hr />
+			<label>Instructions </label>
+			<p>
+				To add an image or audio asset to the robot, first drag-and-drop the file to the appropriate dropbox or click on the box to browse for the file.
+				Once the file has been successfully added, the file name will appear below the dropbox with a check box to the left.
+				Click the checkbox to select the file, then click the Save to Robot button.
+
+				To delete a file from the robot, first populate the list of files by clicking the Populate Audio/Image List button.
+				Select the file from the dropdown list. Then click the Delete Clip/Image button. The maximum size for files is 3MB.
+				Accepted audio file extensions are: .wav, .mp3, .wma, .aac. Accepted image file extensions are: .jpeg, .jpg, .png, .gif.
+			</p>
+			<div class="d-flex flex-row flex-wrap">
+				<div class="d-flex flex-column col-lg-6 col-sm-12">
+					<label class="text-center">Audio</label>
+					<form class="audio-box d-flex justify-content-center align-items-center" method="post" enctype="multipart/form-data">
+						<div class="box__input">
+							<input type="file" name="files[]" id="audio-file" class="box__file" data-multiple-caption="{count} files selected" multiple />
+							<label for="audio-file" class="d-flex flex-wrap box__dragndrop">Choose a file or drag a file here</label>
+						</div>
+					</form>
+					<form id="AudioList"></form>
+					<div class="d-flex flex-row ml-1">
+						<button id="copyAudioBytes" class="btn btn-outline-primary" type="submit">Copy to Clipboard</button>
+						<button id="misty-robot-audio-clip-save" class=" btn btn-outline-primary" type="submit">Save to Robot</button>
+					</div>
+					<button class="asset btn btn-outline-primary ml-1" id="misty-robot-audio-file-get-list">Populate Audio List</button>
+					<form id="play-audio-form" class="form-inline d-flex flex-row">
+						<select id="audio-asset-id" class="form-control small-textfield pl-0"></select>
+						<div><button id="play-audio-button" data-role="button" data-mini="true" type="submit" class="btn btn-outline-primary ml-1">Play Clip</button></div>
+						<!--<div><button id="delete-audio-button" data-role="button" data-mini="true" type="submit" class="btn btn-outline-primary ml-1">Delete Clip</button></div>-->
+					</form>
+				</div>
+				<div class="d-flex flex-column col-lg-6 col-sm-12">
+					<label class="text-center">Image</label>
+					<form class="image-box d-flex justify-content-center align-items-center" method="post" enctype="multipart/form-data">
+						<div class="box__input">
+							<input type="file" name="files[]" id="image-file" class="box__file" data-multiple-caption="{count} files selected" multiple />
+							<label for="image-file" class="d-flex flex-wrap box__dragndrop">Choose a file or drag a file here</label>
+						</div>
+					</form>
+					<form id="ImageList" class="row"></form>
+					<div class="d-flex flex-row ml-1">
+						<button id="copyImageBytes" class="btn btn-outline-primary" type="submit">Copy to Clipboard</button>
+						<button id="misty-robot-image-save" class="btn btn-outline-primary" type="submit">Save to Robot</button>
+					</div>
+					<button class="asset btn btn-outline-primary ml-1" id="misty-robot-image-file-get-list">Populate Image List</button>
+					<form id="display-image-form" class="form-inline d-flex flex-row">
+						<select id="image-asset-id" class="form-control small-textfield pl-0"></select>
+						<div><button id="display-image-button" data-role="button" data-mini="true" type="submit" class="btn btn-outline-primary">Display Image</button></div>
+						<div><button id="delete-image-button" data-role="button" data-mini="true" type="submit" class="btn btn-outline-primary ml-1">Delete Image</button></div>
+					</form>
+				</div>
+			</div>
+		</section>
+		<!--Drive/Locomotion-->
+		<section class="d-flex flex-column" id="locomotion">
+			<h3>Locomotion</h3>
+			<hr />
+			<div class="dropdown driving d-flex flex-row flex-wrap align-items-center mt-5">
+				<div class="pr-5 col-lg-4 col-md-6 col-sm-12 driving-controls">
+					<label class="text-center">Drive Time</label>
+					<form id="motion" role="form">
+						<div id="motion-select" class="form-group dropdown">
+							<button class="btn btn-outline-primary dropdown-toggle form-control" type="button" id="motions-dropdown" data-toggle="dropdown" aria-haspopup="true"
+									aria-expanded="false">
+								Select a motion
+							</button>
+							<ul id="motions" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								<li class="dropdown-item"></li>
+							</ul>
+						</div>
+						<div class="drive-field form-group">
+							<input type="number" class="form-control drive-input" id="duration" placeholder="Duration (ms)" min="0">
+						</div>
+						<div class="form-group">
+							<button type="submit" class="btn btn-outline-primary submit form-control drive-btn">Move Robot</button>
+						</div>
+					</form>
+				</div>
+				<div class="pr-5 col-lg-4 col-md-6 col-sm-12 driving-controls">
+					<label class="text-center">Drive Time by Value</label>
+					<form id="motion-by-value">
+						<div class="drive-field form-group">
+							<input type="number" step="1" class="form-control drive-input" id="linear" placeholder="linear velocity" min="-100" max="100">
+						</div>
+						<div class="drive-field form-group">
+							<input type="number" step="1" class="form-control drive-input" id="angular" placeholder="angular velocity" min="-100" max="100">
+						</div>
+						<div class="drive-field form-group">
+							<input type="number" class="form-control drive-input" id="duration-by-value" placeholder="duration (ms)" min="0" max="10000">
+						</div>
+						<div class="move-robot">
+							<button type="submit" class="btn btn-outline-primary submit form-control drive-btn">Move Robot</button>
+						</div>
+					</form>
+				</div>
+				<div class="pr-5 col-lg-4 col-md-6 col-sm-12 mb-5">
+					<label class="text-center">Manual Driving</label>
+					<table id="driving-table">
+						<tr>
+							<td class="drive-button-cell">
+								<button id="do-drive-left-turn" class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-up fa-lg rotate-45-left"></i></button>
+							</td>
+							<td class="drive-button-cell">
+								<button id="do-drive-forward" class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-up fa-lg"></i></button>
+							</td>
+							<td class="drive-button-cell">
+								<button id="do-drive-right-turn" class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-up fa-lg rotate-45-right"></i></button>
+							</td>
+						</tr>
+						<tr>
+							<td class="drive-button-cell">
+								<button id="do-drive-spin-left" class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-left fa-lg"></i></button>
+							</td>
+							<td class="drive-button-cell">
+								<button id="do-drive-stop"  class="btn btn-outline-primary drive-button"><i class="fa fa-stop-circle fa-lg"></i></button>
+							</td>
+							<td class="drive-button-cell">
+								<button id="do-drive-spin-right"  class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-right fa-lg"></i></button>
+							</td>
+						</tr>
+						<tr>
+							<td class="drive-button-cell">
+								<button id="do-drive-backup-left" class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-down fa-lg rotate-45-right"></i></button>
+							</td>
+							<td class="drive-button-cell">
+								<button id="do-drive-backward" class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-down fa-lg"></i></button>
+							</td>
+							<td class="drive-button-cell">
+								<button id="do-drive-backup-right" class="btn btn-outline-primary drive-button"><i class="fa fa-arrow-down fa-lg rotate-45-left"></i></button>
+							</td>
+						</tr>
+					</table>
+					<div class="mt-5">
+						<label id="drive-time-velocity-label">Velocity (0 to 100%)</label>
+						<input type="range" min="0" max="100" value="25" class="slider" id="drive-time-velocity">
+					</div>
+				</div>
+			</div>
+		</section>
+		<section id="websockets">
+			<h3 class="">Websockets</h3>
+			<hr />
+			<div class="ml-3">
+				<label>Instructions </label>
+				<p>
+					Websockets provide up-to-date information on specified objects.  Right now you may subscribe to the objects as shown below.
+					The Sensor Reading Websockets are an example showing Time of Flight and Battery Charge messages, where the values get streamed to the text box next to them.
+				</p>
+				<p>
+					To see the websocket responses, you must view them through the browser console.
+				</p>
+				<p>
+					The generic subscribe example allows you to pick from our growing list of options to subscribe to.
+					If you only select a named object, the Event Name for that object will be created as the Named Object name and that is the name you must use to unsubscribe.
+					If you do not enter in a debounce, it defaults to 250 ms (the messages will be sent (at most) at millisecond values of the debounce).
+					Too many socket subscriptions at a fast debounce can cause performance issues, so remember to unsubscribe when you don't need data and to set the debounce as high as is appropriate for your needs.
+				</p>
+				<p>
+					To filter to specific details in subscription, you can put the data property path in the ReturnProperty field, which will cause it to return that data.
+					The data property path is specified from the Named Object and currently must be discovered by examining the data packet.
+					For example, if you want Mental State (which you can't subscribe to) which is an object in SelfState, you can put MentalState in the ReturnProperty field.
+					If you want the specific Valence value of the Affect in Mental State, your ReturnProperty will be MentalState.Affect.Valence
+				</p>
+				<p>
+					You may also use the same pattern to filter on data.  In this case, the data will only be sent if the filter is true.
+					For example, if I only want to return the above Mental State's Affect data if the Dominance value in Affect is equal to 1, I would have the following settings.
+					<br /><br />
+					NamedObject : Self State<br />
+					Property: MentalState.Affect.Dominance<br />
+					Comparison: ==<br />
+					Value: 1<br />
+					ReturnProperty: MentalState.Affect<br />
+					<br />
+					The currently allowed comparison options are: ==, !=, &lt;, &gt;=, &gt;, &lt;=, empty and exists
+				</p>
+				<p> Websockets are needed for most of the following commands. API Explorer automatically opens a websocket when you enter an IP address and connect to the robot (at the top of the page).</p>
+			</div>
+			<div class="mt-5 ml-3">
+				<h5>Sensor Reading Websockets</h5>
+				<div class="d-flex flex-row flex-wrap">
+					<div class="col-lg-6 col-sm-12 pl-0">
+						<label class="mt-3">Time Of Flight - Front</label>
+						<div class="d-flex flex-row">
+							<div>
+								<button id="subscribe-to-time-of-flight-front" class="btn btn-outline-primary form-control mt-0">Subscribe</button>
+								<button id="unsubscribe-from-time-of-flight-front" class="btn btn-outline-primary form-control mt-0">Unsubscribe</button>
+							</div>
+							<input class="sensor-output ml-5" type="text" id="current-distance-front" value="Distance (ms)" readonly />
+						</div>
+						<label class="mt-3">Time Of Flight - Right</label>
+						<div class="d-flex flex-row">
+							<div>
+								<button id="subscribe-to-time-of-flight-right" class="btn btn-outline-primary form-control mt-0">Subscribe</button>
+								<button id="unsubscribe-from-time-of-flight-right" class="btn btn-outline-primary form-control mt-0">Unsubscribe</button>
+							</div>
+							<input class="sensor-output ml-5" type="text" id="current-distance-right" value="Distance (ms)" readonly />
+						</div>
+						<label class="mt-3">Time Of Flight - Left</label>
+						<div class="d-flex flex-row">
+							<div>
+								<button id="subscribe-to-time-of-flight-left" class="btn btn-outline-primary form-control mt-0">Subscribe</button>
+								<button id="unsubscribe-from-time-of-flight-left" class="btn btn-outline-primary form-control mt-0">Unsubscribe</button>
+							</div>
+							<input class="sensor-output ml-5" type="text" id="current-distance-left" value="Distance (ms)" readonly />
+						</div>
+						<label class="mt-3">Time Of Flight - Back</label>
+						<div class="d-flex flex-row">
+							<div>
+								<button id="subscribe-to-time-of-flight-back" class="btn btn-outline-primary form-control mt-0">Subscribe</button>
+								<button id="unsubscribe-from-time-of-flight-back" class="btn btn-outline-primary form-control mt-0">Unsubscribe</button>
+							</div>
+							<input class="sensor-output ml-5" type="text" id="current-distance-back" value="Distance (ms)" readonly />
+						</div>
+					</div>
+					<div class="col-lg-6 col-sm-12 pl-0">
+						<label class="">Battery Charge</label>
+						<div class="d-flex flex-row">
+							<div>
+								<button id="misty-robot-subscribe-to-battery-charge" class="btn btn-outline-primary form-control">Subscribe</button>
+								<button id="misty-robot-unsubscribe-from-battery-charge" class="btn btn-outline-primary form-control">Unsubscribe</button>
+							</div>
+							<input id="current-battery-voltage" class="sensor-output ml-5" type="text" value="Battery Voltage" readonly />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mt-5 ml-3">
+				<h5>Other Websockets</h5>
+				<div class="d-flex flex-row flex-wrap">
+					<div class="col-lg-6 col-sm-12 pl-0">
+						<label class="">Subscribe</label>
+						<form id="subscribe-to-named-object">
+							<input class="form-control col-sm-6" placeholder="Event Name" id="eventName">
+							<label class="label-margin" id="named-object-label">Named Object:</label>
+							<select id="namedObject" class="form-control col-sm-6">
+								<option value="FaceDetection">FaceDetection</option>
+								<option value="FaceRecognition">FaceRecognition</option>
+								<option value="LocomotionCommand">LocomotionCommand</option>
+								<option value="HaltCommand">HaltCommand</option>
+								<option value="SelfState">SelfState</option>
+								<option value="TimeOfFlight">TimeOfFlight</option>
+								<option value="WorldState">WorldState</option>
+							</select>
+							<label class="label-margin" id="debounce-label">Debounce (ms):</label>
+							<input class="form-control col-sm-6" value="500" id="debounce">
+							<input class="form-control col-sm-6" placeholder="Property" id="property">
+							<select id="inequality" placeholder="Comparison operator" class="form-control col-sm-6">
+								<option value="==">==</option>
+								<option value="!=">!=</option>
+								<option value=">">></option>
+								<option value="<"><</option>
+								<option value=">=">>=</option>
+								<option value="<="><=</option>
+								<option value="empty">empty</option>
+								<option value="exists">exists</option>
+							</select>
+							<input class="form-control col-sm-6" placeholder="Value" id="value">
+							<input class="form-control col-sm-6" placeholder="Return Property" id="return-property">
+							<button type="submit" class="btn btn-outline-primary">Subscribe</button>
+						</form>
+					</div>
+					<div class="col-lg-6 col-sm-12 pl-0">
+						<label>Unsubscribe</label>
+						<form id="unsubscribe-from-named-object">
+							<div class="form-group">
+								<input class="form-control col-sm-6" placeholder="Event Name" id="event-name">
+								<button type="submit" class="btn btn-outline-primary">Unsubscribe</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section id="beta">
+			<h3>Beta Commands</h3>
+			<hr />
+			<section id="computer-vision" class="ml-3">
+				<h5 class="">Computer Vision </h5>
+				<div>
+					<label>Instructions </label>
+					<p>
+						Enter a name in the text field and start training.  Hold your position in front of the camera, about a foot or two away, for 10 seconds.
+						Only select Cancel Face Training if you want to cancel during that period.
+						The camera will take a series of pictures of your face and attempt to create a face matrix so it can recognize you in the future.
+					</p>
+					<p>
+						Currently, the face detection and recognition data comes directly from the sensors so some of the data may be incomplete.
+						We are currently working on improvements to aggregate this data.
+					</p>
+				</div>
+				<div class="d-flex flex-row flex-wrap">
+					<div class="pl-0 pr-5 d-flex flex-column col-lg-4 col-md-6 col-sm-12">
+						<label class="label-margin">Face Detection</label>
+						<button class="btn btn-outline-primary" id="start-face-detection">Start Face Detection</button>
+						<button class="btn btn-outline-primary" id="stop-face-detection">Stop Face Detection</button>
+					</div>
+					<div class="pl-0 pr-5 d-flex flex-column col-lg-4 col-md-6 col-sm-12">
+						<label class="label-margin">Face Training</label>
+						<form id="face-training-form" class="form-inline mb-0">
+							<input class="form-control" placeholder="Enter name" id="face-id">
+							<button type="submit" class="btn btn-outline-primary">Start Face Training</button>
+						</form>
+						<button class="btn btn-outline-primary mr-2" id="cancel-face-training">Cancel Face Training</button>
+						<div class="d-flex flex-row mr-4">
+							<button class="btn btn-outline-primary col-sm-6" id="get-learned-faces">Get Learned Faces</button>
+							<button class="btn btn-outline-primary col-sm-6 px-0" id="clear-learned-faces">Clear Learned Faces</button>
+						</div>
+					</div>
+					<div class="pl-0 pr-5 d-flex flex-column col-lg-4 col-md-6 col-sm-12">
+						<label class="label-margin">Face Recognition</label>
+						<button class="btn btn-outline-primary" id="start-face-recognition">Start Face Recognition</button>
+						<button class="btn btn-outline-primary" id="stop-face-recognition">Stop Face Recognition</button>
+					</div>
+				</div>
+			</section>
+			<section id="move-head" class="pt-5 pl-3">
+				<h5 class="robotVersion2 hidden">Head & Arm Commands </h5>
+				<h5 class="robotVersion1">Head Commands</h5>
+				<div id="head-instructions">
+					<p>
+						The head movements are still very dependant upon each robot at this time.
+						If your robot's head has not been calibrated or is front heavy, it may not move.
+					</p>
+				</div>
+				<div class="d-flex flex-row flex-wrap">
+					<div class="d-flex flex-column col-lg-4 col-md-6 col-sm-12 pl-0">
+						<label>Move Head</label>
+						<form id="move-head-form">
+							<label class="mt-md-2 pl-0 col-sm-12">Pitch:</label>
+							<input type="range" min="-5" max="5" value="-2" class="slider col-sm-12" id="move-head-pitch">
+							<ul class="range-labels d-flex flex-row pl-0 pr-0  mb-0 list-inline">
+								<li class="col-sm-6 list-inline-item pl-0">Back (Up)</li>
+								<li class="col-sm-6 list-inline-item text-right pr-0">Forward (Down)</li>
+							</ul>
+							<label class="mt-md-2 pl-0 col-sm-12 robotVersion2 hidden">Roll:</label>
+							<input type="range" min="-5" max="5" value="2" class="slider col-sm-12 robotVersion2 hidden" id="move-head-roll">
+							<ul class="range-labels d-flex flex-row pl-0 pr-0 mb-0 list-inline robotVersion2 hidden">
+								<li class="col-sm-6 list-inline-item pl-0 robotVersion2 hidden">Right</li>
+								<li class="col-sm-6 list-inline-item text-right pr-0 robotVersion2 hidden">Left</li>
+							</ul>
+							<label class="mt-md-2 pl-0 col-sm-12 robotVersion2 hidden">Yaw:</label>
+							<input type="range" min="-5" max="5" value="3" class="slider col-sm-12 robotVersion2 hidden" id="move-head-yaw">
+							<ul class="range-labels d-flex flex-row pl-0 pr-0 mb-0 list-inline robotVersion2 hidden">
+								<li class="col-sm-6 list-inline-item pl-0 robotVersion2 hidden">Right</li>
+								<li class="col-sm-6 list-inline-item text-right pr-0 robotVersion2 hidden">Left</li>
+							</ul>
+							<button type="submit" class="btn btn-outline-primary">Move Head</button>
+						</form>
+					</div>
+					<div class="d-flex flex-column pl-md-5 pr-lg-5 col-lg-4 col-md-6 col-sm-12 pl-0">
+						<label class="label-margin">Set Head Position</label>
+						<form id="set-head-position-form">
+							<input type="range" min="-5" max="5" value="2" class="slider col-sm-12" id="set-head-position">
+							<ul class="range-labels d-flex flex-row pl-0 pr-0 list-inline">
+							</ul>
+							<label>Axis:</label>
+							<select id="set-head-axis" class="form-control col-sm-6">
+								<option value="Pitch">Pitch</option>
+								<option class="robotVersion2 hidden" value="Roll">Roll</option>
+								<option class="robotVersion2 hidden" value="Yaw">Yaw</option>
+							</select>
+							<button type="submit" class="btn btn-outline-primary">Move Head</button>
+						</form>
+					</div>
+					<div class="d-flex flex-column col-lg-4 col-md-6 col-sm-12 pl-0 robotVersion2 hidden">
+						<label class="label-margin robotVersion2 hidden">Move Arms</label>
+						<form id="move-arm-form">
+							<label class="mt-md-2 pl-0 col-sm-12 robotVersion2 hidden">Right:</label>
+							<input type="range" min="-5" max="5" value="2" class="slider col-sm-12 robotVersion2 hidden" id="set-right-arm-position">
+							<ul class="range-labels d-flex flex-row pl-0 pr-0 list-inline">
+								<li class="col-sm-6 list-inline-item pl-0 robotVersion2 hidden">Down</li>
+								<li class="col-sm-6 list-inline-item text-right pr-0 robotVersion2 hidden">Up</li>
+							</ul>
+							<label class="mt-md-2 pl-0 col-sm-12 robotVersion2 hidden">Left:</label>
+							<input type="range" min="-5" max="5" value="2" class="slider col-sm-12 robotVersion2 hidden" id="set-left-arm-position">
+							<ul class="range-labels d-flex flex-rowpl-0 pr-0 list-inline robotVersion2 hidden">
+								<li class="col-sm-6 list-inline-item pl-0 robotVersion2 hidden">Up</li>
+								<li class="col-sm-6 list-inline-item text-right pr-0 robotVersion2 hidden">Down</li>
+							</ul>
+							<button type="submit" class="btn btn-outline-primary robotVersion2 hidden">Move Arms</button>
+						</form>
+					</div>
+				</div>
+			</section>
+		</section>
+		<section id="alpha">
+			<h3>Alpha</h3>
+			<hr />
+			<section id="slam" class="ml-3">
+				<h4>Mapping and Exploring</h4>
+				<div>
+					<label>Instructions </label>
+					<p>
+						Open websockets if you have not done so and select start mapping.
+						After a few seconds you should obtain pose, the light should turn green, and the pose updates should start streaming.
+					</p>
+					<p>
+						If you never get pose, select Stop Mapping and then Reset. Check the status with Get Status, and if valid, try again.
+						If you do not see pose updates it is also possible the lighting is too low for the robot.
+						If it does not return ready after multiple Reset and Get Status calls, you may not have turned on the 820 or Slam may be in a bad state requiring a robot reboot.
+					</p>
+					<p>
+						Select one of the drive options (Turn in Circle, etc), or drive the robot around for a fuller map. When you are done with mapping, select Stop Mapping
+						and then Get Map to retrieve the map from the robot.
+						When creating a map or tracking, be sure to adjust the velocity so the robot moves slowly and keeps its pose.
+					</p>
+					<p>
+						To drive to a location, figure out the X, Y coordinates X is Up (forward), Y is across) and then select Start Tracking. You should
+						start to see pose updating again.  You can now enter in the waypoints where you want the robot to drive and select FollowPath (wayponts should be entered in the form of: X1:Y1,X2:Y2,X3:Y3)
+					</p>
+					<p>
+						When you are done driving, you can select stop tracking in order to release resources on the robot.
+					</p>
+				</div>
+				<div class="d-flex flex-column">
+					<h5>Mapping</h5>
+					<hr />
+					<div class="d-flex flex-row flex-wrap">
+						<div class="col-lg-6 col-sm-12 pl-0">
+							<label id="get-pose-x-label">Pose X:</label>
+							<input class="sensor-output" type="text" id="current-x-pose" value="" readonly />
+						</div>
+						<div class="col-lg-6 col-sm-12 pl-0">
+							<label id="get-pose-x-label">Pose Y:</label>
+							<input class="sensor-output" type="text" id="current-y-pose" value="" readonly />
+						</div>
+					</div>
+					<div class="d-flex flex-row flex-wrap">
+						<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+							<button id="misty-robot-slam-map-start" class="btn btn-outline-primary start-map form-control">Start Mapping</button>
+							<button id="misty-robot-slam-mapping-stop" class="btn btn-outline-primary stop-map form-control">Stop Mapping</button>
+							<div class="my-md-3">
+								<svg height="50" width="50" visibility="visible" id="red-pose-circle">
+									<circle cx="25" cy="25" r="20" stroke="black" stroke-width="2" fill="red" />
+									<text x="7" y="30" fill="black">Pose</text>
+								</svg>
+								<svg height="50" width="50" visibility="visible" id="green-pose-circle">
+									<circle cx="25" cy="25" r="20" stroke="black" stroke-width="2" fill="green" />
+									<text x="7" y="30" fill="black">Pose</text>
+								</svg>
+							</div>
+							<label class="mt-md-2" id="mapping-velocity-label">Velocity (0 to 100%)</label><br/>
+							<input type="range" min="0" max="100" value="25" class="slider" id="mapping-velocity" style="width:100%">
+						</div>
+						<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+							<button id="misty-robot-turn" class="btn btn-outline-primary form-control">Turn in Circle</button>
+							<button id="misty-robot-square-drive" class="btn btn-outline-primary form-control">Square Drive</button>
+							<button id="misty-robot-circle-drive" class="btn btn-outline-primary form-control">Circle Drive</button>
+						</div>
+						<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+							<button id="misty-robot-slam-get-status" class="btn btn-outline-primary form-control">Get Status</button>
+							<button id="misty-robot-slam-reset" class="btn btn-outline-primary form-control">Reset</button>
+							<button id="misty-robot-stop2" class="btn btn-outline-primary form-control">Stop</button>
+						</div>
+					</div>
+					<div class="d-flex flex-row flex-wrap mt-3">
+						<div class="col-md-4 col-sm-12 pl-0">
+							<label>How to get a map</label>
+								<p>Read coordinates from the bottom right corner.</p>
+								<p>When determining waypoints, X is the direction the robot is looking at the start of mapping and is read from the bottom of the map to the top of the map.</p>
+								<p>Y is read from right to left with zero being the right side of the map. </p>
+						</div>
+						<div class="col-md-4 col-sm-12 pl-0">
+							<label>Pixels per grid</label>
+							<p>Pixels per grid is a value from 1 to 20 that indicates the number of pixels per grid cell on the rendered map. The higher the number, the larger the map.</p>
+							<input type="number" step="1" class="col-md-4 col-sm-12 form-control" id="pixel-per-grid" placeholder="Pixels Per Grid" value="5" min="1" max="20">
+						</div>
+						<div class="col-md-4 col-sm-12 pl-0">			
+							<button id="misty-robot-slam-get-raw-map" class="btn btn-outline-primary col-md-4 col-sm-12 form-control">Get Map</button>
+						</div>
+					</div>
+					<div class="d-flex flex-row flex-wrap">
+						<canvas id="mapCanvas" class="col-md-9 col-sm-12 mr-2">
+							Sorry, but your browser does not support the HTML5 canvas tag.
+						</canvas>
+						<div class="col-sm-12 col-md-3 pl-0">
+							<div class="color-box" style="background-color: #FFFFFF; color: #000000">Open</div>
+							<div class="color-box" style="background-color: #2A2A2A; color: #FFFFFF">Occupied</div>
+							<div class="color-box" style="background-color: #6600ED; color: #FFFFFF">Covered</div>
+							<div class="color-box" style="background-color: #858585; color: #FFFFFF">Unknown</div>
+						</div>
+					</div>
+				</div>
+				<div class="mt-5">
+					<h5>Tracking</h5>
+					<hr />
+					<div class="d-flex flex-row flex-wrap">
+						<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+							<svg height="50" width="50" visibility="visible" id="red-pose-circle2">
+								<circle cx="25" cy="25" r="20" stroke="black" stroke-width="2" fill="red" />
+								<text x="7" y="30" fill="black">Pose</text>
+							</svg>
+							<svg height="50" width="50" visibility="visible" id="green-pose-circle2">
+								<circle cx="25" cy="25" r="20" stroke="black" stroke-width="2" fill="green" />
+								<text x="7" y="30" fill="black">Pose</text>
+							</svg>
+						</div>
+						<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+							<button id="misty-robot-slam-tracking-start" class="btn btn-outline-primary form-control">Start tracking</button>
+						</div>
+						<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+							<button id="misty-robot-slam-tracking-stop" class="btn btn-outline-primary form-control">Stop tracking</button>
+						</div>
+					</div>
+					<div>
+						<h5>Follow Path</h5>
+						<hr />
+						<div class="d-flex flex-row flex-wrap">
+							<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+								<input class="form-control" id="follow-path-x-value" placeholder="X Coordinate">
+							</div>
+							<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+								<input class="form-control" id="follow-path-y-value" placeholder="Y Coordinate">
+							</div>
+							<div class="col-lg-4 col-md-6 col-sm-12 pl-0">
+								<button id="follow-path-add-waypoint" class="btn btn-outline-primary">Add Waypoint</button>
+							</div>
+						</div>
+						<form id="follow-path-form" class="form-inline">
+							<input class="form-control" id="follow-path-value" value="">
+							<button type="submit" class="btn btn-outline-primary">Follow Path</button>
+						</form>
+					</div>
+				</div>
+			</section>
+			<section id="update">
+				<h3>System Updates</h3>
+				<hr />
+				<div>
+					<label>Instructions</label>
+
+					<p>For more information, please refer to the documentation at <a href="https://docs.mistyrobotics.com/" target="_blank">https://docs.mistyrobotics.com</a>.</p>
+				</div>
+				<div class="col-sm-4 pl-0">
+					<button class="btn btn-outline-primary" id="check-for-system-updates">Check For Updates</button>
+					<button class="btn btn-outline-primary" id="perform-system-update">Perform System Update</button>
+				</div>
+			</section>
+	</section>
+</div>
+	<div id="toast"></div>
+	<!--
+	To collect end-user usage analytics about your application,
+	insert the following script into each page you want to track.
+	Place this code immediately before the closing </head> tag,
+	and before any other scripts. Your first data will appear
+	automatically in just a few seconds.
+	-->
+	<script type="text/javascript">
+		 var appInsights = window.appInsights || function (a) {
+			 function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement("script"); b.src = a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js", d.getElementsByTagName("script")[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; f.length;)b("track" + f.pop()); if (b("setAuthenticatedUserContext"), b("clearAuthenticatedUserContext"), b("startTrackEvent"), b("stopTrackEvent"), b("startTrackPage"), b("stopTrackPage"), b("flush"), !a.disableExceptionTracking) { f = "onerror", b("_" + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c["_" + f](a, b, d, e, h), i } } return c
+		 }({
+			 instrumentationKey: "add5b885-1af5-424d-ad19-ce4422aebfb1"
+		 });
+		 window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
+	</script>
+	<script src="js/MistyRobot/MistyRobot.js"></script>
+	<script src="js/MistyRobot/MistyAjax.js"></script>
+	<script src="js/MistyRobot/MistyAPI.js"></script>
+	<script src="js/MistyRobot/MistyWebSocket.js"></script>
+ </body>
+ </html>
